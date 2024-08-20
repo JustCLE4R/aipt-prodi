@@ -86,7 +86,7 @@
             @endif
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 my-2 d-flex justify-content-between">
-          <a href="/admin/dokumen"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
+          <a href="/superadmin/dokumen"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
           <button class="btn btn-success mx-1 wow fadeInRight" type="submit">Submit</button>
         </div>
       </div>
