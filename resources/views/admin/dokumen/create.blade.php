@@ -6,20 +6,30 @@
     <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Dokumen Baru</h2>
     <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
   </div>
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <strong>Whoops!</strong> There were some problems with your input.<br><br>
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
   <div class="container border rounded shadow" style="width:70%;">
     
     <form action="/admin/dokumen" id="form" method="POST" enctype="multipart/form-data">
       <div class="row justify-content-between align-items-center p-3">
         @csrf
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-            <label for="nama" class=" text-dark h6">Nama</label>
+            <label for="nama" class="text-dark h6">Nama</label>
             <input  class="form-control @error('nama') is-invalid @enderror" type="text" name="nama" id="nama" value="{{ old('nama') }}" required>
             @if ($errors->has('nama'))
               <p class="error text-danger">{{ $errors->first('nama') }}</p>
             @endif
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-            <label for="kriteria"  class=" text-dark h6" >Kriteria</label> <br>
+            <label for="kriteria"  class="text-dark h6" >Kriteria</label> <br>
             <select class="form-control @error('kriteria') is-invalid @enderror" name="kriteria" id="kriteria" required>
               @for ($i = 1; $i <= 9; $i++)
                 <option value="{{ $i }}" {{ old('kriteria') == $i ? 'selected' : '' }}>{{ 'Kriteria '. $i }}</option>
@@ -33,22 +43,25 @@
             @endif
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-            <label for="sub_kriteria" class=" text-dark h6">Sub Kriteria</label>
+            <label for="sub_kriteria" class="text-dark h6">Sub Kriteria</label>
             <input class="form-control @error('sub_kriteria') is-invalid @enderror" type="text" name="sub_kriteria" id="sub_kriteria" value="{{ old('sub_kriteria') }}">
             @if ($errors->has('sub_kriteria'))
               <p class="error text-danger">{{ $errors->first('sub_kriteria') }}</p>
             @endif
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2"></div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-            <label class=" text-dark h6" for="tipe">Tipe Dokumen</label><br>
+            <label class="text-dark h6" for="tipe">Tipe Dokumen</label><br>
             <select class="form-control" name="tipe" id="tipe">
               <option value="file" {{ old('tipe') != 'URL' ? 'selected' : '' }}>File</option>
               <option value="url" {{ old('tipe') == 'URL' ? 'selected' : '' }}>URL</option>
+              <option value="shareable" {{ old('tipe') == 'shareable' ? 'selected' : '' }}>Shareable</option>
             </select>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2"></div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
           <div class="mb-3">
-            <label  class=" text-dark h6" for="file">File</label>
+            <label  class="text-dark h6" for="file">File</label>
             <input class="form @error('file') is-invalid @enderror" type="file" name="file" id="file" required>
           </div>                     
           @if ($errors->has('file'))
@@ -56,14 +69,26 @@
           @endif
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-          <label class=" text-dark h6" for="url">URL</label>
+          <label class="text-dark h6" for="url">URL</label>
           <input class="form-control @error('url') is-invalid @enderror" type="text" name="url" id="url" value="{{ old('url') }}" disabled>
           @if ($errors->has('url'))
             <p class="error text-danger">{{ $errors->first('url') }}</p>
           @endif
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+          <label class="text-dark h6" for="shareable">Berbagi File</label>
+          <select class="form-control" name="shareable" id="shareable" disabled>
+            <option value="" hidden></option>
+            @foreach ($shareables as $shareable)
+              <option value="{{ $shareable->id }}" {{ old('shareable') == $shareable->id ? 'selected' : '' }}>{{ $shareable->nama }}</option>
+            @endforeach
+          </select>
+          @if ($errors->has('shareable'))
+            <p class="error text-danger">{{ $errors->first('shareable') }}</p>
+          @endif
+        </div>
         <div class="col-lg-12 col-md-12 col-sm-12 my-2">
-          <label for="catatan" class=" text-dark h6 @error('catatan') is-invalid @enderror">Catatan</label>
+          <label for="catatan" class="text-dark h6 @error('catatan') is-invalid @enderror">Catatan</label>
           <textarea class="form-control" name="catatan" id="catatan" placeholder="Tambahkan Catatan Disini.." id="floatingTextarea">{{ old('catatan') }}</textarea>
           @if ($errors->has('catatan'))
             <p class="error text-danger">{{ $errors->first('catatan') }}</p>
@@ -82,18 +107,14 @@
       const value = this.value;
       const fileInput = document.getElementById('file');
       const urlInput = document.getElementById('url');
+      const shareableInput = document.getElementById('shareable');
       
-      if (value == 'file') {
-        fileInput.required = true;
-        urlInput.required = false;
-        fileInput.disabled = false;
-        urlInput.disabled = true;
-      } else {
-        fileInput.required = false;
-        urlInput.required = true;
-        fileInput.disabled = true;
-        urlInput.disabled = false;
-      }
+      fileInput.required = value === 'file';
+      urlInput.required = value === 'url';
+      shareableInput.required = value === 'shareable';
+      fileInput.disabled = value !== 'file';
+      urlInput.disabled = value !== 'url';
+      shareableInput.disabled = value !== 'shareable';
     });
   </script>
 </section>

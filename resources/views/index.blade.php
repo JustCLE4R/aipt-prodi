@@ -32,6 +32,14 @@
                   <option value="PDF" {{ request()->input('tipe') == 'PDF' ? 'selected' : '' }}>PDF</option>
                   <option value="Image" {{ request()->input('tipe') == 'Image' ? 'selected' : '' }}>Image</option>
                 </select>
+                @if (Auth::user()->role == 'superadmin')
+                  <select class="form-select p-1 bg-success text-light shadow" name="prodi" id="" style="max-width: 70px">
+                    <option value="" selected>Prodi</option>
+                    @foreach ($prodis as $prodi)
+                      <option value="{{ $prodi->id }}" {{ request()->input('prodi') == $prodi->id ? 'selected' : '' }}>{{ $prodi->nama }}</option>
+                    @endforeach
+                  </select>
+                @endif
                 <input type="text" class="form-control shadow" name="result" placeholder="Cari Dokumen.." value="{{ old('result', request()->input('result')) }}">
                 <div class="input-group-append">
                   <button class="btn btn-search shadow" id="button-addon2"><i class="bi bi-search"></i></button>
@@ -756,8 +764,6 @@ $(document).ready(function() {
             }
           }
         });
-      
-   
 })();
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -781,6 +787,15 @@ $(document).ready(function() {
     animateValue('dokumenCounter', 0, {{ $dokumenCount }}, 2000);
     animateValue('fakultasCounter', 0, 9, 2000);
     animateValue('prodiCounter', 0, 63, 2000);
+  });
+
+  document.querySelector('form').addEventListener('submit', function(event) {
+    const inputs = this.querySelectorAll('select, input[name="result"]');
+    inputs.forEach(input => {
+      if (!input.value.trim()) {
+        input.disabled = true;
+      }
+    });
   });
   </script>
 @if (session()->has('success'))

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\superadmin;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,6 +26,8 @@ class DokumenRequest extends FormRequest
             'nama' => 'required|max:255',
             'kriteria' => 'required|numeric|between:1,12',
             'sub_kriteria' => 'max:255',
+            'programStudi' => 'required|exists:program_studis,id',
+            'shareable' => 'required|in:1,0',
             'catatan' => 'max:255',
             'file' => 'required_without_all:url|mimes:pdf,png,jpg,jpeg|max:102400',
             'url' => 'required_without_all:file|url|max:255',
@@ -35,13 +37,23 @@ class DokumenRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => ':attribute wajib diisi!',
-            'mimes' => ':attribute harus berupa PDF atau gambar',
-            'max' => ':attribute maksimal :max karakter',
-            'numeric' => ':attribute harus berupa angka',
-            'between' => ':attribute harus diantara 1 sampai 9',
-            'required_without_all' => ':attribute harus diisi jika :values tidak diisi',
-            'url' => ':attribute harus berupa URL yang valid',
+            'nama.required' => 'Nama harus diisi.',
+            'nama.max' => 'Nama tidak boleh melebihi 255 karakter.',
+            'kriteria.required' => 'Kriteria harus diisi.',
+            'kriteria.numeric' => 'Kriteria harus berupa angka.',
+            'kriteria.between' => 'Kriteria harus di antara 1 dan 12.',
+            'sub_kriteria.max' => 'Sub Kriteria tidak boleh melebihi 255 karakter.',
+            'programStudi.required' => 'Program Studi harus diisi.',
+            'programStudi.exists' => 'Program Studi yang dipilih tidak valid.',
+            'shareable.required' => 'Shareable harus diisi.',
+            'shareable.in' => 'Shareable yang dipilih tidak valid.',
+            'catatan.max' => 'Catatan tidak boleh melebihi 255 karakter.',
+            'file.required_without_all' => 'File harus diisi jika tidak ada URL yang ada.',
+            'file.mimes' => 'File harus berupa file PDF atau gambar.',
+            'file.max' => 'File tidak boleh melebihi 100 megabita.',
+            'url.required_without_all' => 'URL harus diisi jika tidak ada File yang ada.',
+            'url.url' => 'URL harus berupa URL yang valid.',
+            'url.max' => 'URL tidak boleh melebihi 255 karakter.',
         ];
     }
 
@@ -80,8 +92,7 @@ class DokumenRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'user_id' => Auth::user()->id,
-            'program_studi_id' => Auth::user()->programStudi->id,
+            'user_id' => $this->programStudi,
         ]);
     }
 }

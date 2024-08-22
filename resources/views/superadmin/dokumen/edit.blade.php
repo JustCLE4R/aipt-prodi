@@ -48,7 +48,21 @@
             @endforeach
           </select>
         </div>
-        <div class="col-lg-8 col-md-6 col-sm-12"></div>
+        @if ($dokumen->user->role == 'superadmin')
+          <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+            <label for="shareable" class="text-dark h6">Berbagi file?</label>
+            <select class="form-control" name="shareable" id="shareable">
+              <option value="0" {{ old('shareable', $dokumen->shareable) == 0 ? 'selected' : '' }}>Tidak</option>
+              <option value="1" {{ old('shareable', $dokumen->shareable) == 1 ? 'selected' : '' }}>Iya</option>
+            </select>
+            @if ($errors->has('shareable'))
+              <p class="error text-danger">{{ $errors->first('shareable') }}</p>
+            @endif
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12"></div>
+        @else
+          <div class="col-lg-8 col-md-6 col-sm-12"></div>
+        @endif
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
           <label class=" text-dark h6" for="tipe_dokumen">Tipe Dokumen</label><br>
           <select class="form-control" name="tipe_dokumen" id="tipe_dokumen">

@@ -44,12 +44,25 @@
           <label for="programStudi" class="text-dark h6" >Program Studi</label>
           <select class="form-control @error('programStudi') is-invalid @enderror" name="programStudi" id="programStudi" required>
             <option hidden disabled selected>Pilih Program Studi</option>
-            @foreach ($prodis as $prodi)
-              <option value="{{ $prodi->id }}" {{ old('programStudi') == $prodi->id ? 'selected' : '' }}>{{ $prodi->nama }}</option>
+            @foreach ($users as $user)
+              <option value="{{ $user->id }}" {{ old('programStudi') == $user->id ? 'selected' : '' }}>{{ $user->programStudi->nama }}</option>
             @endforeach
           </select>
+          @if ($errors->has('programStudi'))
+            <p class="error text-danger">{{ $errors->first('programStudi') }}</p>
+          @endif
         </div>
-        <div class="col-lg-8 col-md-6 col-sm-12"></div>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+          <label for="shareable" class="text-dark h6">Berbagi file?</label>
+          <select class="form-control" name="shareable" id="shareable">
+            <option value="0" {{ old('shareable') == 0 ? 'selected' : '' }}>Tidak</option>
+            <option value="1" {{ old('shareable') == 1 ? 'selected' : '' }}>Iya</option>
+          </select>
+          @if ($errors->has('shareable'))
+            <p class="error text-danger">{{ $errors->first('shareable') }}</p>
+          @endif
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12"></div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
             <label class=" text-dark h6" for="tipe">Tipe Dokumen</label><br>
             <select class="form-control" name="tipe" id="tipe">
@@ -81,7 +94,7 @@
           @endif
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-between">
-          <a href="/admin/dokumen"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
+          <a href="/superadmin/dokumen"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
           <button class="btn btn-success mx-1 wow fadeInRight" type="submit"><i class="bi bi-check-lg"></i> Submit</button>
         </div>
       </div>
@@ -104,6 +117,25 @@
         urlInput.required = true;
         fileInput.disabled = true;
         urlInput.disabled = false;
+      }
+    });
+
+    document.getElementById('shareable').addEventListener('change', function() {
+      const value = this.value;
+      const programStudi = document.getElementById('programStudi');
+      if (value == 1) {
+        for (let i = 0; i < programStudi.options.length; i++) {
+          if (i !== 1) {
+            programStudi.options[i].disabled = true;
+          }
+        }
+        programStudi.selectedIndex = 1;
+        programStudi.required = false;
+      } else {
+        for (let i = 0; i < programStudi.options.length; i++) {
+          programStudi.options[i].disabled = false;
+        }
+        programStudi.required = true;
       }
     });
   </script>

@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         User::create($request->all());
 
-        return redirect('/superadmin/user')->with('success', 'User <b>' . $request->nama . '</b> berhasil ditambahkan');
+        return redirect('/superadmin/user')->with('success', 'User <b>' . $request->username . '</b> berhasil ditambahkan');
     }
 
     /**
@@ -79,21 +79,24 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update([
+        $data = [
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'program_studi_id' => $request->program_studi_id,
             'role' => $request->role,
-        ]);
+        ];
 
         if ($request->password) {
-            $user->update([
-                'password' => Hash::make($request->password),
-            ]);
+            $data['password'] = Hash::make($request->password);
         }
+
+        $user->update($data);
 
         return redirect('/superadmin/user')->with('success', 'User <b>' . $request->name . '</b> berhasil diubah');
     }

@@ -25,7 +25,7 @@
                 ">
                     Halo,
                     @if (Auth::user()->role == 'superadmin')
-                        {{ Auth::user()->programStudi->nama }}!
+                        Superadmin!
                     @elseif (Auth::user()->role == 'admin')
                         Admin
                         {{ Auth::user()->programStudi->nama }}!

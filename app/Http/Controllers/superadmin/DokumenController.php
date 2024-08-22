@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\superadmin;
 
+use App\Models\User;
 use App\Models\Dokumen;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DokumenRequest;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\UpdateDokumenRequest;
-use App\Models\ProgramStudi;
+use App\Http\Requests\superadmin\DokumenRequest;
+use App\Http\Requests\superadmin\UpdateDokumenRequest;
 
 class DokumenController extends Controller
 {
@@ -24,7 +25,7 @@ class DokumenController extends Controller
 
         $dokumens = $this->search($term, $kriteria, $tipe, $prodi, 10);
 
-        $prodis = ProgramStudi::where('id', '>', 1)->orderBy('nama', 'asc')->get();
+        $prodis = ProgramStudi::orderByRaw("id = 1 desc, nama asc")->get();
 
         return view('superadmin.dokumen.index', [
             'title' => 'Super Admin Daftar Dokumen',
@@ -38,11 +39,13 @@ class DokumenController extends Controller
      */
     public function create()
     {
-        $prodis = ProgramStudi::where('id', '>', 1)->orderBy('nama', 'asc')->get();
+        $prodis = ProgramStudi::orderByRaw("id = 1 desc, nama asc")->get();
+        $users = User::where('role', '!=', 'user')->get()->unique('program_studi_id');
 
         return view('superadmin.dokumen.create', [
             'title' => 'Super Admin Tambah Dokumen',
-            'prodis' => $prodis
+            'prodis' => $prodis,
+            'users' => $users
         ]);
     }
 
@@ -72,7 +75,7 @@ class DokumenController extends Controller
      */
     public function edit(Dokumen $dokumen)
     {
-        $prodis = ProgramStudi::where('id', '>', 1)->orderBy('nama', 'asc')->get();
+        $prodis = ProgramStudi::orderByRaw("id = 1 desc, nama asc")->get();
 
         return view('superadmin.dokumen.edit', [
             'prodis' => $prodis,

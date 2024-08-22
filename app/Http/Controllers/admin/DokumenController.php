@@ -6,9 +6,9 @@ use App\Models\Dokumen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\DokumenRequest;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\UpdateDokumenRequest;
+use App\Http\Requests\admin\DokumenRequest;
+use App\Http\Requests\admin\UpdateDokumenRequest;
 use App\Http\Controllers\DokumenController as PublicDokumenController;
 
 class DokumenController extends Controller
@@ -35,8 +35,11 @@ class DokumenController extends Controller
      */
     public function create()
     {
+        $shareables = Dokumen::where('shareable', 1)->get();
+
         return view('admin.dokumen.create', [
             'title' => 'Admin Tambah Dokumen',
+            'shareables' => $shareables
         ]);
     }
 
@@ -45,9 +48,23 @@ class DokumenController extends Controller
      */
     public function store(DokumenRequest $request)
     {
-        Dokumen::create($request->all());
+        $prepareData = $request->only(['nama', 'kriteria', 'sub_kriteria', 'catatan', 'user_id']);
 
-        return redirect('/admin/dokumen')->with('success', 'Dokumen baru ditambahkan');
+        if ($request->hasFile('file')) {
+            $prepareData['path'] = $request->file('file')->store('dokumen');
+            $prepareData['tipe'] = str_contains($request->file('file')->getMimeType(), 'pdf') ? 'PDF' : 'Image';
+        } elseif ($request->tipe == 'URL') {
+            $prepareData['path'] = $request->url;
+            $prepareData['tipe'] = 'URL';
+        } elseif ($request->tipe == 'Shareable') {
+            $shareable_dokumen = Dokumen::findOrFail($request->shareable);
+            $prepareData['path'] = $shareable_dokumen->path;
+            $prepareData['tipe'] = $shareable_dokumen->tipe;
+        }
+
+        Dokumen::create($prepareData);
+
+        return redirect('/admin/dokumen')->with('success', 'Dokumen <b>'. $request->nama . '</b> berhasil ditambahkan!');
     }
 
     /**
@@ -69,7 +86,7 @@ class DokumenController extends Controller
      */
     public function edit(Dokumen $dokumen)
     {
-        if($dokumen->programStudi->id != Auth::user()->programStudi->id)
+        if($dokumen->user->programStudi->id != Auth::user()->programStudi->id)
             return redirect('/admin/dokumen')->with('error', 'Dokumen tidak ditemukan');
 
         return view('admin.dokumen.edit', [
@@ -83,7 +100,7 @@ class DokumenController extends Controller
      */
     public function update(UpdateDokumenRequest $request, Dokumen $dokumen)
     {
-        if($dokumen->programStudi->id != Auth::user()->programStudi->id)
+        if($dokumen->user->programStudi->id != Auth::user()->programStudi->id)
             return redirect('/admin/dokumen')->with('error', 'Dokumen tidak ditemukan');
 
         $prepareData = $request->only(['nama', 'kriteria', 'sub_kriteria', 'catatan']);
@@ -104,7 +121,7 @@ class DokumenController extends Controller
 
         $dokumen->update($prepareData);
 
-        return redirect('/admin/dokumen')->with('success', 'Dokumen diubah');
+        return redirect('/admin/dokumen')->with('success', 'Dokumen <b>' . $dokumen->nama . '</b> berhasil diubah');
     }
 
     /**
@@ -112,14 +129,17 @@ class DokumenController extends Controller
      */
     public function destroy(Dokumen $dokumen)
     {
-        if($dokumen->programStudi->id != Auth::user()->programStudi->id)
+        if($dokumen->user->programStudi->id != Auth::user()->programStudi->id){
             return redirect('/admin/dokumen')->with('error', 'Dokumen tidak ditemukan');
+        }
+        
+        $dokumenCheckShareable = Dokumen::where('path', $dokumen->path)->count();
 
-        if($dokumen->tipe != 'URL'){
+        if($dokumen->tipe != 'URL' && $dokumenCheckShareable == 1){
             Storage::delete($dokumen->path);
         }
 
         $dokumen->delete();
-        return redirect('/admin/dokumen')->with('success', 'Dokumen dihapus');
+        return redirect('/admin/dokumen')->with('success', 'Dokumen <b>' . $dokumen->nama . '</b> berhasil dihapus!');
     }
 }

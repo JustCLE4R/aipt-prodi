@@ -10,35 +10,34 @@
   
   <div class="row justify-content-center mt-3 wow fadeInDown">
     <div class="col-6">
-        @if (session('status'))
+        @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
             <i class="bi bi-check-circle me-2"></i>
-            {{ session('status') }}
+            {!! session('success') !!}
         </div>
         @endif
         @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
             <i class="bi bi-exclamation-circle me-2"></i>
-            {{ session('error') }}
+            {!! session('error') !!}
         </div>
         @endif
     </div>
-</div>
+  </div>
 
 <script>
-    setTimeout(function() {
-        $('.alert').fadeTo(500, 0).slideUp(500, function(){
-            $(this).remove(); 
-        });
-    }, 5000);
+  setTimeout(function() {
+      $('.alert').fadeTo(500, 0).slideUp(500, function(){
+          $(this).remove(); 
+      });
+  }, 5000);
 </script>
-
 
   <div class="container border rounded shadow p-4" style="width:90%;">
     <div class="row justify-content-between pb-4">
       <div class="col-lg-4 col-md-6 col-sm-12 mb-2 mb-md-0">
         <a href="/admin"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
-        <a href="{{ route('dokumen.create') }}" class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-plus-lg"></i> Tambah</a>
+        <a href="/admin/dokumen/create" class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-plus-lg"></i> Tambah</a>
       </div>
       <div class="col-lg-4 col-md-8 col-sm-12">
         <form class="wow fadeInRight" ata-wow-delay="0.3s" action="/admin/dokumen" method="get">
@@ -85,25 +84,25 @@
             <td>{{ $dokumen->sub_kriteria }}</td>
             <td class="text-center">{{ $dokumen->tipe }}</td>
             <td class="text-center">
-              <a class="text-primary" href="{{ route('dokumen.edit', $dokumen->id) }}"><i class="bi bi-pencil-square"></i></a>
+              <a class="text-primary" href="/admin/dokumen/{{ $dokumen->id }}/edit"><i class="bi bi-pencil-square"></i></a>
 
-                <button type="button" class="text-danger" style="background:none; border:none; padding:0;" data-toggle="modal" data-target="#confirmationModal"><i class="bi bi-trash"></i></button>
+                <button type="button" class="text-danger" style="background:none; border:none; padding:0;" data-toggle="modal" data-target="#confirmationDeleteModal-{{ $dokumen->id }}"><i class="bi bi-trash"></i></button>
 
-              <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal fade" id="confirmationDeleteModal-{{ $dokumen->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ $dokumen->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  " role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title text-dark" id="exampleModalLabel">Konfirmasi Hapus Dokumen</h5>
+                      <h5 class="modal-title text-dark" id="deleteModalLabel-{{ $dokumen->id }}">Konfirmasi Hapus Dokumen</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body d-flex justify-content-start text-dark">
-                      Apakah anda yakin ingin menghapus dokumen ini?
+                      Apakah anda yakin ingin menghapus dokumen&nbsp; <b>{{ $dokumen->nama }}</b> &nbsp;ini?
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                      <form class="d-inline" action="{{ route('dokumen.destroy', $dokumen->id) }}" method="post">
+                      <form class="d-inline" action="/admin/dokumen/{{ $dokumen->id }}" method="post">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Hapus</button>
