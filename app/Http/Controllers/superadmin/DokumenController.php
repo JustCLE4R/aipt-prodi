@@ -54,9 +54,19 @@ class DokumenController extends Controller
      */
     public function store(DokumenRequest $request)
     {
-        Dokumen::create($request->all());
+        $data = $request->all();
 
-        return redirect('/superadmin/dokumen')->with('success', 'Dokumen <b>' . $request->nama . '</b> berhasil ditambahkan');
+        if ($request->hasFile('file')) {
+            $data['tipe'] = str_contains($request->file('file')->getMimeType(), 'pdf') ? 'PDF' : 'Image';
+            $data['path'] = $request->file('file')->store('dokumen');
+        } else {
+            $data['tipe'] = 'URL';
+            $data['path'] = $data['url'];
+        }
+
+        Dokumen::create($data);
+
+        return redirect('/superadmin/dokumen')->with('success', 'Dokumen <b>' . $data['nama'] . '</b> berhasil ditambahkan');
     }
 
     /**

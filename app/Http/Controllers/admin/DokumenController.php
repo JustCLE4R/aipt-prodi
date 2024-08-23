@@ -48,15 +48,15 @@ class DokumenController extends Controller
      */
     public function store(DokumenRequest $request)
     {
-        $prepareData = $request->only(['nama', 'kriteria', 'sub_kriteria', 'catatan', 'user_id']);
+        $prepareData = $request->except('shareable');
 
         if ($request->hasFile('file')) {
             $prepareData['path'] = $request->file('file')->store('dokumen');
             $prepareData['tipe'] = str_contains($request->file('file')->getMimeType(), 'pdf') ? 'PDF' : 'Image';
-        } elseif ($request->tipe == 'URL') {
+        } elseif ($request->tipe == 'url') {
             $prepareData['path'] = $request->url;
             $prepareData['tipe'] = 'URL';
-        } elseif ($request->tipe == 'Shareable') {
+        } elseif ($request->tipe == 'shareable') {
             $shareable_dokumen = Dokumen::findOrFail($request->shareable);
             $prepareData['path'] = $shareable_dokumen->path;
             $prepareData['tipe'] = $shareable_dokumen->tipe;

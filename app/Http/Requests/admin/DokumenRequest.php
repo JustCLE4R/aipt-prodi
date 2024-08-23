@@ -60,22 +60,6 @@ class DokumenRequest extends FormRequest
         ];
     }
 
-    public function all($keys = null): array
-    {
-        $data = parent::all($keys);
-
-        $mimeType = $this->file('file') ? $this->file('file')->getMimeType() : $data['tipe'] = 'URL';
-        if (str_contains($mimeType, 'pdf')) {
-            $data['tipe'] = 'PDF';
-        } else if (str_contains($mimeType, 'image')) {
-            $data['tipe'] = 'Image';
-        } else {
-            $data['tipe'] = 'Shareable';
-        }
-        
-        return $data;
-    }
-
     protected function prepareForValidation(): void
     {
         $this->merge([
