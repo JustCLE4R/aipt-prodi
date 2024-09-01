@@ -80,12 +80,16 @@
           <select class="form-control" name="shareable" id="shareable" disabled>
             <option value="" hidden></option>
             @foreach ($shareables as $shareable)
-              <option value="{{ $shareable->id }}" {{ old('shareable') == $shareable->id ? 'selected' : '' }}>{{ $shareable->nama }}</option>
+              <option value="{{ $shareable->id }}" path="{{ $shareable->path }}" {{ old('shareable') == $shareable->id ? 'selected' : '' }}>{{ $shareable->nama }}</option>
             @endforeach
           </select>
           @if ($errors->has('shareable'))
             <p class="error text-danger">{{ $errors->first('shareable') }}</p>
           @endif
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+          <label for="preview" class="text-dark h6">Preview</label>
+          <div id="preview" class="border rounded p-2"></div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 my-2">
           <label for="catatan" class="text-dark h6 @error('catatan') is-invalid @enderror">Catatan</label>
@@ -115,6 +119,31 @@
       fileInput.disabled = value !== 'file';
       urlInput.disabled = value !== 'url';
       shareableInput.disabled = value !== 'shareable';
+
+      document.getElementById('preview').innerHTML = '';
+      document.getElementById('file').value = '';
+      document.getElementById('url').value = '';
+      document.getElementById('shareable').selectedIndex = 0;
+    });
+
+    document.getElementById('file').addEventListener('change', function() {
+      const file = this.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('preview').innerHTML = `<embed src="${e.target.result}"  style="width: 100%; height: auto; min-height:300px;">`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('shareable').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const path = selectedOption.getAttribute('path');
+      console.log(path, selectedOption);
+      if (path) {
+      document.getElementById('preview').innerHTML = `<embed src="{{ url('storage/${path}') }}" style="width: 100%; height: auto; min-height: 300px;">`;
+      } else {
+      document.getElementById('preview').innerHTML = '';
+      }
     });
   </script>
 </section>

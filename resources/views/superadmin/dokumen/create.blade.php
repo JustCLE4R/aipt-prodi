@@ -53,13 +53,13 @@
           @endif
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-          <label for="shareable" class="text-dark h6">Berbagi file?</label>
-          <select class="form-control" name="shareable" id="shareable">
-            <option value="0" {{ old('shareable') == 0 ? 'selected' : '' }}>Tidak</option>
-            <option value="1" {{ old('shareable') == 1 ? 'selected' : '' }}>Iya</option>
+          <label for="status" class="text-dark h6">Berbagi file?</label>
+          <select class="form-control" name="status" id="status">
+            <option value="private" {{ old('status') == 'private' ? 'selected' : '' }}>Tidak</option>
+            <option value="share" {{ old('status') == 'share' ? 'selected' : '' }}>Iya</option>
           </select>
-          @if ($errors->has('shareable'))
-            <p class="error text-danger">{{ $errors->first('shareable') }}</p>
+          @if ($errors->has('status'))
+            <p class="error text-danger">{{ $errors->first('status') }}</p>
           @endif
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12"></div>
@@ -120,10 +120,10 @@
       }
     });
 
-    document.getElementById('shareable').addEventListener('change', function() {
+    document.getElementById('status').addEventListener('change', function() {
       const value = this.value;
       const programStudi = document.getElementById('programStudi');
-      if (value == 1) {
+      if (value == 'share') {
         for (let i = 0; i < programStudi.options.length; i++) {
           if (i !== 1) {
             programStudi.options[i].disabled = true;

@@ -51,7 +51,7 @@
         @if ($dokumen->user->role == 'superadmin')
           <div class="col-lg-4 col-md-6 col-sm-12 my-2">
             <label for="shareable" class="text-dark h6">Berbagi file?</label>
-            <select class="form-control" name="shareable" id="shareable">
+            <select class="form-control" name="shareable" id="shareable" disabled>
               <option value="0" {{ old('shareable', $dokumen->shareable) == 0 ? 'selected' : '' }}>Tidak</option>
               <option value="1" {{ old('shareable', $dokumen->shareable) == 1 ? 'selected' : '' }}>Iya</option>
             </select>

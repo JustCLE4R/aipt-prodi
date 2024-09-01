@@ -35,7 +35,7 @@ class DokumenController extends Controller
      */
     public function create()
     {
-        $shareables = Dokumen::where('shareable', 1)->get();
+        $shareables = Dokumen::where('status', 'share')->get();
 
         return view('admin.dokumen.create', [
             'title' => 'Admin Tambah Dokumen',
@@ -58,6 +58,8 @@ class DokumenController extends Controller
             $prepareData['tipe'] = 'URL';
         } elseif ($request->tipe == 'shareable') {
             $shareable_dokumen = Dokumen::findOrFail($request->shareable);
+            $prepareData['status'] ='borrow';
+            $prepareData['borrow_from'] = $request->shareable;
             $prepareData['path'] = $shareable_dokumen->path;
             $prepareData['tipe'] = $shareable_dokumen->tipe;
         }
@@ -89,9 +91,12 @@ class DokumenController extends Controller
         if($dokumen->user->programStudi->id != Auth::user()->programStudi->id)
             return redirect('/admin/dokumen')->with('error', 'Dokumen tidak ditemukan');
 
+        $shareables = Dokumen::where('status', 'share')->get();
+
         return view('admin.dokumen.edit', [
             'title' => 'Admin Edit Dokumen',
-            'dokumen' => $dokumen
+            'dokumen' => $dokumen,
+            'shareables' => $shareables
         ]);
     }
 
@@ -106,18 +111,21 @@ class DokumenController extends Controller
         $prepareData = $request->only(['nama', 'kriteria', 'sub_kriteria', 'catatan']);
 
         if ($request->hasFile('file')) {
-            if ($dokumen->tipe != 'URL') {
-                Storage::delete($dokumen->path);
-            }
+            $prepareData['status'] ='private';
             $prepareData['path'] = $request->file('file')->store('dokumen');
             $prepareData['tipe'] = str_contains($request->file('file')->getMimeType(), 'pdf') ? 'PDF' : 'Image';
-        } elseif ($request->url) {
-            if ($dokumen->tipe != 'URL') {
-                Storage::delete($dokumen->path);
-            }
+        } elseif ($request->tipe == 'url') {
+            $prepareData['status'] ='private';
             $prepareData['path'] = $request->url;
             $prepareData['tipe'] = 'URL';
+        } elseif ($request->tipe == 'shareable') {
+            $shareable_dokumen = Dokumen::findOrFail($request->shareable);
+            $prepareData['status'] ='borrow';
+            $prepareData['borrow_from'] = $request->shareable;
+            $prepareData['path'] = $shareable_dokumen->path;
+            $prepareData['tipe'] = $shareable_dokumen->tipe;
         }
+
 
         $dokumen->update($prepareData);
 
@@ -132,10 +140,8 @@ class DokumenController extends Controller
         if($dokumen->user->programStudi->id != Auth::user()->programStudi->id){
             return redirect('/admin/dokumen')->with('error', 'Dokumen tidak ditemukan');
         }
-        
-        $dokumenCheckShareable = Dokumen::where('path', $dokumen->path)->count();
 
-        if($dokumen->tipe != 'URL' && $dokumenCheckShareable == 1){
+        if($dokumen['status'] != 'borrow'){
             Storage::delete($dokumen->path);
         }
 
