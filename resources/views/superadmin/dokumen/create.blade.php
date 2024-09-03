@@ -72,7 +72,7 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
           <div class="mb-3">
-            <label  class=" text-dark h6" for="file">File</label>
+            <label class=" text-dark h6" for="file">File</label>
             <input class="form @error('file') is-invalid @enderror" type="file" name="file" id="file" required>
           </div>                     
           @if ($errors->has('file'))
@@ -85,6 +85,10 @@
           @if ($errors->has('url'))
             <p class="error text-danger">{{ $errors->first('url') }}</p>
           @endif
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+          <label for="preview" class="text-dark h6">Preview</label>
+          <div id="preview" class="border rounded p-2"></div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 my-2">
           <label for="catatan" class=" text-dark h6 @error('catatan') is-invalid @enderror">Catatan</label>
@@ -118,6 +122,10 @@
         fileInput.disabled = true;
         urlInput.disabled = false;
       }
+
+      document.getElementById('preview').innerHTML = '';
+      document.getElementById('file').value = '';
+      document.getElementById('url').value = '';
     });
 
     document.getElementById('status').addEventListener('change', function() {
@@ -137,6 +145,15 @@
         }
         programStudi.required = true;
       }
+    });
+
+    document.getElementById('file').addEventListener('change', function() {
+      const file = this.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('preview').innerHTML = `<embed src="${e.target.result}"  style="width: 100%; height: auto; min-height:300px;">`;
+      };
+      reader.readAsDataURL(file);
     });
   </script>
 </section>

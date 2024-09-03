@@ -50,18 +50,6 @@
         </div>
         <div class="col-lg-8 col-md-6 col-sm-12 my-2"></div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
-          <label for="old_password" class="text-dark h6">Password Lama</label> <br>
-          <div class="input-group">
-            <input  class="form-control @error('old_password') is-invalid @enderror" type="password" name="old_password" id="old_password">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button" id="old-password-toggle"><i class="bi bi-eye" id="old-password-icon"></i></button>
-            </div>
-          </div>
-          @if ($errors->has('old_password'))
-            <p class="error text-danger">{{ $errors->first('old_password') }}</p>
-          @endif
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 my-2">
           <label for="password" class="text-dark h6">Password Baru</label> <br>
           <div class="input-group">
             <input  class="form-control @error('password') is-invalid @enderror" type="password" name="password" id="password">
@@ -85,10 +73,8 @@
             <p class="error text-danger">{{ $errors->first('password_confirmation') }}</p>
           @endif
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 mt-0 mb-2">
-          <p class="text-muted m-0">*Password tidak wajib diubah</p>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-between">
+        <div class="col-lg-4 col-md-6 col-sm-12 d-flex my-2"></div>
+        <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-between my-3">
           <a href="/superadmin/user"  class="btn btn-success wow fadeInRight" ata-wow-delay="0.3s"><i class="bi bi-chevron-double-left"></i> Kembali</a>
           <button class="btn btn-success mx-1 wow fadeInRight" type="submit"><i class="bi bi-check-lg"></i> Submit</button>
         </div>

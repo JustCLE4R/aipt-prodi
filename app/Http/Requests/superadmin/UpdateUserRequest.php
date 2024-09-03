@@ -26,7 +26,6 @@ class UpdateUserRequest extends FormRequest
             'username' => 'required|string|max:255|unique:users,username,' . $this->user->id,
             'prodi' => 'required|exists:program_studis,id',
             'role' => 'required|in:admin,user',
-            'old_password' => 'nullable|required_with:password|string|min:8',
             'password' => 'nullable|required_with:old_password|string|min:8|confirmed',
             'password_confirmation' => 'nullable|required_with:password|string|min:8',
         ];
