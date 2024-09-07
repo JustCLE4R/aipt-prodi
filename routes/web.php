@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\LandingController;
-use App\Http\Controllers\VisualisasiController;
-use App\Http\Controllers\admin\DokumenController as AdminDokumenController;
+use App\Http\Controllers\admin\visualisasi\MahasiswaBaruController;
+use App\Http\Controllers\admin\visualisasi\CalonMahasiswaController;
+use App\Http\Controllers\admin\visualisasi\MahasiswaAktifController;
 use App\Http\Controllers\admin\UserController as AdminUserController;
+use App\Http\Controllers\admin\visualisasi\MahasiswaLulusanController;
+use App\Http\Controllers\admin\DokumenController as AdminDokumenController;
+use App\Http\Controllers\superadmin\UserController as SuperadminUserController;
 use App\Http\Controllers\superadmin\DokumenController as SuperadminDokumenController;
 use App\Http\Controllers\superadmin\ProgramStudiController as SuperadminProdiController;
-use App\Http\Controllers\superadmin\UserController as SuperadminUserController;
 
 Route::middleware(['guest', 'no-cache', 'security-header'])->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -24,8 +27,18 @@ Route::middleware(['auth', 'security-header'])->group(function () {
 
 Route::prefix('admin')->middleware(['auth', 'is-admin', 'security-header'])->group(function () {
     Route::view('/', 'admin.index');
+    Route::view('/visualisasi', 'admin.visualisasi.index');
     Route::resource('/dokumen', AdminDokumenController::class)->parameters(['dokumen' => 'dokumen']);
     Route::resource('/user', AdminUserController::class)->only(['edit', 'update', 'show']);
+
+    Route::prefix('visualisasi')->group(function () {
+        Route::prefix('mahasiswa')->group(function () {
+            Route::resource('/calon', CalonMahasiswaController::class)->parameters(['calon' => 'calonMahasiswa'])->except(['show']);
+            Route::resource('/baru', MahasiswaBaruController::class)->parameters(['baru' => 'mahasiswaBaru'])->except(['show']);
+            Route::resource('/aktif', MahasiswaAktifController::class)->parameters(['aktif' => 'mahasiswaAktif'])->except(['show']);
+            Route::resource('/lulusan', MahasiswaLulusanController::class)->parameters(['lulusan' => 'mahasiswaLulusan'])->except(['show']);
+        });
+    });
 });
 
 Route::prefix('superadmin')->middleware(['auth', 'is-superadmin', 'security-header'])->group(function () {
@@ -34,33 +47,3 @@ Route::prefix('superadmin')->middleware(['auth', 'is-superadmin', 'security-head
     Route::resource('/prodi', SuperadminProdiController::class)->parameters(['prodi' => 'prodi'])->except(['show']);
     Route::resource('/user', SuperadminUserController::class)->parameters(['user' => 'user'])->except(['show']);
 });
-
-
-
-
-
-
-// Route::middleware(['security-header'])->prefix('visualisasi')->group(function () {
-//     Route::view('/', 'visualisasi.index')->name('visualisasi.index');
-    
-//     Route::prefix('mahasiswa')->group(function () {
-//         Route::get('{status}/{jenjang}', [VisualisasiController::class, 'show']);
-
-//         Route::view('mahasiswa-tugas-akhir', 'visualisasi.mahasiswa.mahasiswa-tugas-akhir');
-//         Route::view('mahasiswa-asing', 'visualisasi.mahasiswa.mahasiswa-asing');
-//     });
-
-//     Route::prefix('sdm')->group(function () {
-//         Route::prefix('dosen')->group(function () {
-//             Route::view('per-homebase', 'visualisasi.sdm.dosen.dosen-perHomebase');
-//             Route::view('per-jabatan', 'visualisasi.sdm.dosen.dosen-perJabatan');
-//             Route::view('per-pendidikan', 'visualisasi.sdm.dosen.dosen-perPendidikan');
-//             Route::view('per-sertifikasi', 'visualisasi.sdm.dosen.dosen-perSertifikasi');
-//             Route::view('per-tidak-tetap', 'visualisasi.sdm.dosen.dosen-perTidakTetap');
-//         });
-
-//         Route::view('tendik', 'visualisasi.sdm.tendik');
-//     });
-
-//     Route::view('akreditasi', 'visualisasi.akreditasi');
-// });
