@@ -7,7 +7,7 @@ html {
 }
 
 #form input, #form select, #form textarea{
-  border-color:#1cad1cd6;
+  border-color:orange;
 }
 
 .form-control:focus {
@@ -17,16 +17,16 @@ html {
 
 .form-select:active, .form-select:focus {
   background-color: #fff;
-  color: #000; 
+  color: #000;  
   outline: none; 
-  border-color: #677893 ;
+  border-color: orange ;
 }
 .btn-search{
-  background-color: #677893;
+  background-color: #f57d00;
   color: #fff;
 }
 .form-select {
-  border-color: #677893;
+  border-color:#f57d00;
 }
 /* CSS untuk menambahkan border radius kiri pada select kriteria */
 select[name="kriteria"] {
@@ -41,7 +41,7 @@ select[name="kriteria"] {
 }
 
 .bg-success.text-light {
-  background-color: #677893 !important; 
+  background-color: #f57d00 !important; 
   color: #fff !important;
 }
 
@@ -62,7 +62,7 @@ select[name="kriteria"] {
   width: 14.63%;
   height: 19.83%;
   border-radius: 100%;
-  background: #677893;
+  background: #ffad4e;
   transform: rotateZ(212deg) scale(1.5);
   transform-origin: 100% 100%;
   animation: floatUpDown 3s ease-in-out infinite, rotateForever 3s linear infinite;
@@ -87,7 +87,7 @@ select[name="kriteria"] {
   top: -17.9%;
   width: 6.63%;
   height: 8.83%;
-  background: #677893;
+  background: #ffc40e;
   transform: rotateZ(45deg) scale(1.5);
   transform-origin: 100% 100%;
   animation: floatUpDown 3s ease-in-out infinite, rotateForever 3s linear infinite;
@@ -111,7 +111,7 @@ select[name="kriteria"] {
   top: 85.6%;
   width: 19.51%;
   height: 26.01%;
-  background: #677893;
+  background: #ff7a00;
   z-index:2;
   transform: rotateZ(-22deg);
   transform-origin: 100% 100%;
@@ -447,7 +447,7 @@ a.back-to-top i {
   height: 40px;
   line-height: 40px;
   color: #fff;
-  background: #098107;
+  background: #ef6a00;
   border-radius: 30px;
   text-align: center;
   transition: all 0.2s ease-in-out;
@@ -479,7 +479,7 @@ a.back-to-top:hover, a.back-to-top:focus {
   aspect-ratio: 1;
   display: grid;
   grid: 50%/50%;
-  color:#16a744;
+  color:#f09121;
   --_g: no-repeat linear-gradient(currentColor 0 0);
   background: var(--_g), var(--_g), var(--_g);
   background-size: 50.1% 50.1%;
@@ -490,7 +490,7 @@ a.back-to-top:hover, a.back-to-top:focus {
 
 .text-loader{
   top:55%;
-  color:#045d0494;
+  color:#f09121;
   font-size: 14px;
   position: absolute;
 }
@@ -610,7 +610,7 @@ hr {
 #features .box-item:hover,
 .box-item:hover {
   box-shadow: 0 10px 22px 10px rgba(27, 38, 49, 0.1);
-  background-color: #098107; /* Warna latar belakang saat hover */
+  background-color: #ef6a00; /* Warna latar belakang saat hover */
 }
 
 #features .box-item:hover .icon i,
@@ -660,14 +660,16 @@ hr {
 
 .services-item .icon i {
   font-size: 30px;
-  color: #098107;
+  color: #ef6a00;
   line-height: 70px;
   transition: all 0.3s ease-in-out 0s;
   -moz-transition: all 0.3s ease-in-out 0s;
   -webkit-transition: all 0.3s ease-in-out 0s;
   -o-transition: all 0.3s ease-in-out 0s;
 }
-
+.services-item .icon i:hover {
+  color: #ef6a00 !important;
+}
 .services-item .services-content h3 {
   margin-top: 10px;
   font-weight: 500;
@@ -810,12 +812,12 @@ nav .navbar .links li .link::after {
 }
 
 nav .navbar .links li .link:hover {
-  color: green;
+  color: #ffad4e;
 }
 
-nav .navbar .links li .link:hover::after {
-  background-color: green;
-}
+/* nav .navbar .links li .link:hover::after {
+  background-color: orange;
+} */
 
 .links li:hover .htmlcss-arrow,
 .links li:hover .js-arrow {
@@ -1071,7 +1073,7 @@ nav .navbar .links li:hover .js-sub-menu {
 }
 
 #hero-area .contents .head-title {
-  color: #222222;
+  color: #ef6a00;
   font-size: 42px;
   font-weight: 700;
   line-height: 60px;
@@ -1733,15 +1735,29 @@ textarea {
 
 .page-item.active .page-link {
   color: #fff;
-  background-color: green;
-  border-color: green;
+  background-color: #ef6a00;
+  border-color: #ef6a00;
 }
 .page-link {
-  color:green;
+  color:#ef6a00;
+}
+.page-link:hover{
+  color:#ef6a00;
 }
 button:hover{
   cursor: pointer;
 }
+.btn-success {
+  background-color:#ef6a00 !important;
+  border-color:white !important;
+}
+.text-success {
+  color:#ef6a00 !important;
+}
+.text-success:hover {
+  color:#ef6a00 !important;
+}
+
 
 .service-section {
   background-image: url("https://preview.uideck.com/items/bliss/assets/img/service/service-bg.jpg");
@@ -1762,15 +1778,15 @@ button:hover{
   background: #077d0b !important;
 }
 .service-section .single-service:hover .icon.color-1 {
-  background: #03831e;
+  background: #ef6a00;
 }
 
 .service-section .single-service:hover .icon.color-2 {
-  background:#03831e;
+  background:#ef6a00;
 }
 
 .service-section .single-service:hover .icon.color-3 {
-  background: #03831e;
+  background: #ef6a00;
 }
 
 
@@ -1790,15 +1806,15 @@ button:hover{
 }
 
 .service-section .single-service .icon.color-1 {
-  background: #a6f1b6;
+  background: #ff9d56;
 }
 
 .service-section .single-service .icon.color-2 {
-  background: #a6f1b6;
+  background: #ff9d56;
 }
 
 .service-section .single-service .icon.color-3 {
-  background: #a6f1b6;
+  background: #ff9d56;
 }
 
 

@@ -12,8 +12,21 @@
     <div class="row">
       <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
         <div class="contents move-effect ">
-          <h2 class="head-title wow fadeInRight" ata-wow-delay="0.3s">Selamat Datang di Website Pusat Data Akreditasi</h2>
-          <p class=" wow fadeInRight" ata-wow-delay="0.3s">Pusat Data Bukti Fisik Pendukung Akreditasi Universitas Islam Negeri Sumatera Utara Medan</p>
+          <h4> 
+        Halo,
+        @if (Auth::user()->role == 'superadmin')
+            Superadmin!
+        @elseif (Auth::user()->role == 'admin')
+            Admin
+            {{ Auth::user()->programStudi->nama }}!
+        @else
+            Asesor
+            {{ Auth::user()->programStudi->nama }}!
+            
+        @endif
+    </h4>
+          <h2 class="head-title wow fadeInRight" ata-wow-delay="0.3s">Selamat Datang di Website Pusat Data Akreditasi Prodi</h2>
+          <p class=" wow fadeInRight" ata-wow-delay="0.3s">Pusat Data Bukti Fisik Pendukung Akreditasi Prodi Universitas Islam Negeri Sumatera Utara Medan</p>
           <div class="header-button wow fadeInRight" ata-wow-delay="0.5s">
             <form class="d-inline" action="/daftar-dokumen" method="get">
               <div class="input-group mb-3">
@@ -80,7 +93,7 @@
           <div class="hero-figure-box hero-figure-box-09 move-effect" ></div>
           <div class="hero-figure-box hero-figure-box-07 move-effect" ></div>
           <div class="hero-figure-box hero-figure-box-08 " data-wow-delay=".5s" data-rotation="-22deg" style="transform: rotate(-22deg) scale(1); opacity: 1;"></div>
-          <img class="img-fluid move-effect" src="/img/bg/akreditasi.svg" alt="">
+          <img class="img-fluid move-effect" src="/img/header-hero.svg" alt="">
         </div>            
       </div>
     </div>
@@ -561,7 +574,7 @@
               <p>
                 UIN Sumatera Utara Medan, yang sering dikenal dengan singkatan UINSU, adalah sebuah lembaga pendidikan tinggi Islam yang berlokasi di Medan, Sumatera Utara. Keberadaan UINSU adalah suatu kebanggaan bagi kami semua, dan hal ini tercermin dalam berbagai aspek kehidupan kampus ini.UIN Sumatera Utara Medan memiliki 8 Fakultas dan 1 Program Pascasarjana. UINSU adalah kampus islam yang memiliki moto “Smart Islamic University”
               </p>
-              <a href="https://uinsu.ac.id" class="btn btn-success mt-3">Kunjungi <i class="bi bi-chevron-double-right"></i></a>
+              <a href="https://uinsu.ac.id"  class="btn btn-success mt-3">Kunjungi <i class="bi bi-chevron-double-right"></i></a>
             </div>
           </div>
         </div>

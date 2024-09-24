@@ -12,29 +12,7 @@
                 <a href="#">
                     <img src="/img/logo.png" alt="">
                 </a>
-                <span style="
-                        text-align: left;
-                        font-size: 14px;
-                        font-weight: 400;
-                        -webkit-font-smoothing: subpixel-antialiased;
-                        line-height: 25px;
-                        font-family: Heebo, sans-serif;
-                        color: #585978;
-                        list-style: none;
-                        box-sizing: border-box;
-                ">
-                    Halo,
-                    @if (Auth::user()->role == 'superadmin')
-                        Superadmin!
-                    @elseif (Auth::user()->role == 'admin')
-                        Admin
-                        {{ Auth::user()->programStudi->nama }}!
-                    @else
-                        Asesor
-                        {{ Auth::user()->programStudi->nama }}!
-                        
-                    @endif
-                </span>
+               
             </div>
             <i class="bx bx-menu menu-icon"></i>
             <div class="nav-links">
@@ -48,6 +26,7 @@
                         <li><a class="link" href="/superadmin">Superadmin</a></li>
                     @endif
                     <li><a class="link" href="/logout">Logout</a></li>
+                    
                 </ul>
             </div>
 
